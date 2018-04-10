@@ -8,4 +8,5 @@ services:
     image: redis-pipeline:1.0.0
     volumes:
       - "../:/var/www/html"
+      - "${INPUT_DIRECTORY}:${INPUT_DIRECTORY}"
     working_dir: '/var/www/html'

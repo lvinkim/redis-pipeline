@@ -1,0 +1,10 @@
+[
+  {
+    "channel": "redis-pipeline-1",
+    "filepath": "/home/lvinkim/ddisk/redis-pipeline/var/logstash/redis-pipeline-1.txt"
+  },
+  {
+    "channel": "redis-pipeline-2",
+    "filepath": "/home/lvinkim/ddisk/redis-pipeline/var/logstash/redis-pipeline-2.txt"
+  }
+]

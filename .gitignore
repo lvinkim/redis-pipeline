@@ -3,7 +3,10 @@
 !.gitignore
 
 !/app/
+!/config/
 !/docker/
+!/tests/
+!/var/
 !.env.example
 !composer.json
 !composer.lock

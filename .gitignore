@@ -1,0 +1,9 @@
+/*
+
+!.gitignore
+
+!/app/
+!/docker/
+!.env.example
+!composer.json
+!composer.lock

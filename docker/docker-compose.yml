@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  app:
+    container_name: redis-pipeline-master
+    env_file: .env
+    build: ./app
+    image: redis-pipeline:1.0.0
+    volumes:
+      - "../:/var/www/html"
+    working_dir: '/var/www/html'

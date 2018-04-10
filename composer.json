@@ -1,0 +1,13 @@
+{
+    "name": "redis/pipeline",
+    "authors": [
+        {
+            "name": "vinkim",
+            "email": "lee.vinkim@yahoo.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^2.4",
+        "predis/predis": "^1.1"
+    }
+}

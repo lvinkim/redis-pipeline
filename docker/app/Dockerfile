@@ -2,11 +2,11 @@
 FROM ubuntu:16.04
 
 # 使用阿里云镜像
-RUN sed -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list \
-  && sed -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list
+#RUN sed -i "s/archive.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list \
+#  && sed -i "s/security.ubuntu.com/mirrors.aliyun.com/g" /etc/apt/sources.list
 
 # 使用网络代理
-ENV http_proxy=http://192.168.1.105:1087 https_proxy=https://192.168.1.105:1087
+#ENV http_proxy=http://192.168.1.105:1087 https_proxy=https://192.168.1.105:1087
 
 # 安装 php7.1
 RUN apt-get update && apt-get install -y \
@@ -49,4 +49,4 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 关闭使用网络代理
-ENV http_proxy='' https_proxy=''
+#ENV http_proxy='' https_proxy=''

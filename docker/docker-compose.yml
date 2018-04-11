@@ -8,5 +8,7 @@ services:
     image: redis-pipeline:1.0.0
     volumes:
       - "../:/var/www/html"
+      - "./app/start.sh:/root/start.sh"
       - "${INPUT_DIRECTORY}:${INPUT_DIRECTORY}"
     working_dir: '/var/www/html'
+    command: ["/bin/bash", "/root/start.sh"]

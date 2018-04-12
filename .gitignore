@@ -5,6 +5,7 @@
 !/app/
 !/config/
 !/docker/
+!/shell/
 !/tests/
 !/var/
 !.env.example

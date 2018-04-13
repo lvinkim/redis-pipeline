@@ -5,6 +5,7 @@
 !/app/
 !/config/
 !/docker/
+!/scripts/
 !/shell/
 !/tests/
 !/var/

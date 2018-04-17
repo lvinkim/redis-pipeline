@@ -22,5 +22,5 @@ $configs = \App\Utility\ConfigReader::getConfigs();
 
 foreach ($configs as $config) {
     $filepath = $config['filepath'];
-    @unlink($filepath);
+    file_put_contents($filepath, '');
 }

@@ -33,15 +33,19 @@ $redisClient = new \Predis\Client($parameters, $options);
 //每隔2000ms触发一次
 $timer = swoole_timer_tick(1000, function ($timer_id) use ($redisClient) {
 
-    $configs = \App\Utility\ConfigReader::getConfigs();
+    try {
+        $configs = \App\Utility\ConfigReader::getConfigs();
 
-    $phpTailfs = \App\Utility\TailfFactory::genTailfs($configs);
-    /** @var \App\Services\PhpTailf $phpTailf */
-    foreach ($phpTailfs as $channel => $phpTailf) {
-        $newLines = $phpTailf->getNewLines();
-        foreach ($newLines as $newLine) {
-            $redisClient->publish($channel, $newLine);
+        $phpTailfs = \App\Utility\TailfFactory::genTailfs($configs);
+        /** @var \App\Services\PhpTailf $phpTailf */
+        foreach ($phpTailfs as $channel => $phpTailf) {
+            $newLines = $phpTailf->getNewLines();
+            foreach ($newLines as $newLine) {
+                $redisClient->publish($channel, $newLine);
+            }
         }
+    } catch (Exception $exception) {
+        echo $exception->getMessage() . PHP_EOL;
     }
 
 });

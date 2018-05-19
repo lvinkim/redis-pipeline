@@ -36,4 +36,26 @@ class ConfigReader
         return $acceptConfigs;
     }
 
+    public static function makeMap($configs)
+    {
+        $configsMap = array_combine(
+            array_column($configs, 'channel'),
+            array_column($configs, 'filepath')
+        );
+        return $configsMap;
+    }
+
+    public static function cleanCache($channel)
+    {
+        $configs = self::getConfigs();
+        $configsMap = ConfigReader::makeMap($configs);
+
+        $filepath = $configsMap[$channel] ?? false;
+        
+        if (is_file($filepath)) {
+            file_put_contents($filepath, '');
+        }
+
+    }
+
 }

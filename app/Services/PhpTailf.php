@@ -40,7 +40,7 @@ class PhpTailf
         $fsize = filesize($this->file);
 
         if ($fsize < $this->lastFetchedSize) {
-            $this->lastFetchedSize = $fsize;
+            $this->lastFetchedSize = 0;
         }
 
         $maxLength = ($fsize - $this->lastFetchedSize);

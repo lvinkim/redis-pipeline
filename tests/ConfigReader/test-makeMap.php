@@ -2,14 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: lvinkim
- * Date: 11/04/2018
- * Time: 1:06 AM
+ * Date: 19/05/2018
+ * Time: 1:27 PM
  */
 
 namespace Tests;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+use App\Utility\ConfigReader;
 use Dotenv\Dotenv;
 
 // load env
@@ -18,4 +19,5 @@ $env->load();
 
 $configs = \App\Utility\ConfigReader::getConfigs();
 
-var_dump($configs);
+$configsMap = ConfigReader::makeMap($configs);
+var_dump($configsMap);

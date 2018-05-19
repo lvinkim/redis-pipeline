@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: lvinkim
- * Date: 11/04/2018
- * Time: 1:06 AM
+ * Date: 19/05/2018
+ * Time: 11:22 AM
  */
 
 namespace Tests;
@@ -16,6 +16,3 @@ use Dotenv\Dotenv;
 $env = new Dotenv(__DIR__ . '/../../');
 $env->load();
 
-$configs = \App\Utility\ConfigReader::getConfigs();
-
-var_dump($configs);

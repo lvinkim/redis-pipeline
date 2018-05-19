@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   app:
@@ -11,4 +11,6 @@ services:
       - "./app/start.sh:/root/start.sh"
       - "${INPUT_DIRECTORY}:${INPUT_DIRECTORY}"
     working_dir: '/var/www/html'
-    command: ["/bin/bash", "/root/start.sh"]
+    command:
+      - php
+      - app/main.php

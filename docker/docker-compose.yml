@@ -11,6 +11,7 @@ services:
       - "./app/start.sh:/root/start.sh"
       - "${INPUT_DIRECTORY}:${INPUT_DIRECTORY}"
     working_dir: '/var/www/html'
+    restart: always
     command:
       - php
       - app/main.php

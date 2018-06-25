@@ -12,3 +12,4 @@
 !.env.example
 !composer.json
 !composer.lock
+!docker-compose.yml

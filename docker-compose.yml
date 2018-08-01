@@ -11,3 +11,15 @@ services:
     command:
       - php
       - app/main.php
+
+  crontab:
+    image: lvinkim/php-env-docker:latest
+    volumes:
+      - ".:/var/www/html"
+      - "${INPUT_DIRECTORY}:${INPUT_DIRECTORY}"
+    working_dir: '/var/www/html'
+    restart: always
+    command:
+      - /usr/bin/env
+      - php
+      - bin/crontab.php

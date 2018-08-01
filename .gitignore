@@ -3,6 +3,7 @@
 !.gitignore
 
 !/app/
+!/bin/
 !/config/
 !/docker/
 !/scripts/

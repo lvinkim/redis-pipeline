@@ -1,6 +1,0 @@
-/*
-
-!.gitignore
-!/app/
-!.env.example
-!docker-compose.yml

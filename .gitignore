@@ -5,13 +5,15 @@
 !/app/
 !/bin/
 !/config/
-!/docker/
-!/scripts/
+!/public/
 !/shell/
+!/src/
 !/tests/
 !/var/
 !.env.example
 !composer.json
 !composer.lock
 !docker-compose.yml
+!docker-compose-dev.yml
 !README.md
+!xdebug.disable.ini

@@ -22,9 +22,9 @@ class TrialCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $nowTime = date('Y-m-d H:i:s');
+        $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 测试命令，开始");
 
-        $output->writeln("[{$nowTime}] 测试命令");
+        $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 测试命令，结束");
     }
 
 }

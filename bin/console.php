@@ -1,18 +1,25 @@
 #!/usr/bin/env php
 <?php
 
+use Slim\App;
 use Symfony\Component\Console\Application;
 
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-(new \Dotenv\Dotenv(dirname(__DIR__) . '/'))->load();
+// 初始化 slim app
+$settings = require dirname(__DIR__) . '/src/settings.php';
+$app = new App($settings);
+require dirname(__DIR__) . '/src/dependencies.php';
 
 $console = new Application("redis pipeline console");
 
 $console->addCommands([
     new \App\Command\TrialCommand(),
     new \App\Command\AliveCommand(),
+    new \App\Command\TailFollowCommand($app->getContainer()),
+    new \App\Command\AutoCleanCommand($app->getContainer()),
+    new \App\Command\GetConfigsCommand($app->getContainer()),
 ]);
 
 try {

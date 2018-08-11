@@ -36,11 +36,16 @@ class AliveCommand extends Command
             'host' => $redisHost,
             'port' => $redisPort,
         ];
-        $options = [
-            'parameters' => [
-                'password' => $redisPassword
-            ],
-        ];
+
+        $options = [];
+        if ($redisPassword) {
+            $options = [
+                'parameters' => [
+                    'password' => $redisPassword
+                ],
+            ];
+        }
+
         $redisClient = new Client($parameters, $options);
 
         $channel = 'app-alive';

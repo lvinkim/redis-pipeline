@@ -31,13 +31,15 @@ INPUT_DIRECTORY={{path}}
 ### 管道配置
 ```
 $ cd config
-$ cp pipeline.json.example pipeline.json
+$ cp pipeline.json.mini pipeline.json
 $ vi pipeline.json
 [
-    {
-      "channel": "health-watcher",
-      "filepath": "<path-to>/health-watcher.log"
-    }
+  {
+    "channel": "health-watcher",
+    "filePath": "PROJECT_DIRECTORY/var/logstash/health-watcher.log.",
+    "postfixFormat": "Y-m-d",
+    "enable": true
+  }
 ]
 
 channel : 表示 redis 订阅的频道
@@ -46,7 +48,7 @@ filepath : tail -f 监听的文件
 
 ### 安装
 ```
-$ docker-compose run --rm app composer install
+$ docker-compose run --rm crontab composer install
 ```
 
 ### 启动

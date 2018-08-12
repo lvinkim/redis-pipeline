@@ -13,6 +13,9 @@ return (function () {
             'env' => getenv('ENV'),
             'displayErrorDetails' => getenv('ENV') == 'dev' ? true : false, // set to false in production
             'addContentLengthHeader' => false, // Allow the web server to send the content-length header
+            'input' => [
+                'directory' => getenv('INPUT_DIRECTORY')
+            ],
             'root' => [
                 'directory' => dirname(__DIR__),
             ],

@@ -8,12 +8,18 @@
 
 namespace App\Command;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TrialCommand extends Command
 {
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this->setName('cmd:trial')

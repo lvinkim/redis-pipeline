@@ -1,13 +1,13 @@
 [
   {
-    "channel": "redis-pipeline-1",
-    "filePath": "/home/lvinkim/ddisk/redis-pipeline/var/logstash/redis-pipeline-1.txt",
+    "channel": "health-watcher",
+    "filePath": "PROJECT_DIRECTORY/var/logstash/health-watcher.log.",
     "postfixFormat": "Y-m-d",
     "enable": true
   },
   {
-    "channel": "redis-pipeline-2",
-    "filePath": "/home/lvinkim/ddisk/redis-pipeline/var/logstash/redis-pipeline-2.txt",
+    "channel": "example",
+    "filePath": "INPUT_DIRECTORY/logs/example.log.",
     "postfixFormat": "Y-m-d",
     "enable": true
   }

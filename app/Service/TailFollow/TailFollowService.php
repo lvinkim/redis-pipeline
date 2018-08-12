@@ -12,12 +12,16 @@ namespace App\Service\TailFollow;
 use App\Entity\Channel;
 use App\Entity\Config;
 use App\Service\Component\ShareableService;
+use App\Service\Config\Reader;
 use App\Service\Redis\CacheRedisService;
 use App\Service\Redis\PipeRedisService;
 use Psr\Container\ContainerInterface;
 
 class TailFollowService extends ShareableService
 {
+    /** @var Reader */
+    private $configReader;
+
     /** @var PipeRedisService */
     private $pipeRedisService;
 
@@ -28,6 +32,7 @@ class TailFollowService extends ShareableService
     {
         parent::__construct($container);
 
+        $this->configReader = $container[Reader::class];
         $this->pipeRedisService = $container[PipeRedisService::class];
         $this->cacheRedisService = $container[CacheRedisService::class];
     }
@@ -39,8 +44,9 @@ class TailFollowService extends ShareableService
     public function follow(Config $configEntity, Channel $channelEntity)
     {
         // 组装要 follow 的文件名
+        $fullPath = $this->configReader->genFullPath($configEntity, $channelEntity);
+
         $channelName = $configEntity->getChannel();
-        $filePathPrefix = $configEntity->getFilePath();
         $postfixFormat = $configEntity->getPostfixFormat();
 
         $date = $channelEntity->getDate();
@@ -53,8 +59,6 @@ class TailFollowService extends ShareableService
         }
 
         $newDate = date($postfixFormat);
-
-        $fullPath = $filePathPrefix . $date;
 
         // follow
         $phpTailFollow = new PhpTailFollow($fullPath, $size);

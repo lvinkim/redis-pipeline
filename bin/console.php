@@ -15,8 +15,8 @@ require dirname(__DIR__) . '/src/dependencies.php';
 $console = new Application("redis pipeline console");
 
 $console->addCommands([
-    new \App\Command\TrialCommand(),
-    new \App\Command\AliveCommand(),
+    new \App\Command\TrialCommand($app->getContainer()),
+    new \App\Command\AliveCommand($app->getContainer()),
     new \App\Command\TailFollowCommand($app->getContainer()),
     new \App\Command\AutoCleanCommand($app->getContainer()),
     new \App\Command\GetConfigsCommand($app->getContainer()),

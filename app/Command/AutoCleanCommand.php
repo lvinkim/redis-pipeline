@@ -9,6 +9,7 @@
 namespace App\Command;
 
 
+use App\Entity\Channel;
 use App\Service\Config\Reader;
 use App\Service\Redis\CacheRedisService;
 use Psr\Container\ContainerInterface;
@@ -45,16 +46,17 @@ class AutoCleanCommand extends Command
 
         $configs = $this->configReader->getConfigs();
         foreach ($configs as $config) {
-            $filePathPrefix = $config->getFilePath();
+
             $postfixFormat = $config->getPostfixFormat();
+            $lastDate = date($postfixFormat, strtotime('-1 day'));
 
-            $date = date($postfixFormat, strtotime('-1 day'));
-
-            $fullPath = $filePathPrefix . $date;
+            $lastChannel = new Channel();
+            $lastChannel->setDate($lastDate);
+            $fullPath = $this->configReader->genFullPath($config, $lastChannel);
 
             $channel = $this->cacheRedisService->getChannel($config->getChannel());
 
-            if (is_writable($fullPath) && $date != $channel->getDate()) {
+            if (is_writable($fullPath) && $lastDate != $channel->getDate()) {
                 file_put_contents($fullPath, '');
 
                 $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 清除 {$fullPath} 成功");

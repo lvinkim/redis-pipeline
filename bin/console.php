@@ -20,6 +20,7 @@ $console->addCommands([
     new \App\Command\TailFollowCommand($app->getContainer()),
     new \App\Command\AutoCleanCommand($app->getContainer()),
     new \App\Command\GetConfigsCommand($app->getContainer()),
+    new \App\Command\ResetSizeCommand($app->getContainer()),
 ]);
 
 try {

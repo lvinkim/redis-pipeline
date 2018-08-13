@@ -11,6 +11,7 @@ namespace App\Command;
 
 use App\Entity\Channel;
 use App\Service\Config\Reader;
+use App\Service\Logger\CustomLogger;
 use App\Service\Redis\CacheRedisService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -26,12 +27,17 @@ class AutoCleanCommand extends Command
     /** @var CacheRedisService */
     private $cacheRedisService;
 
+    /** @var CustomLogger */
+    private $logger;
+
     public function __construct(ContainerInterface $container)
     {
         parent::__construct();
 
         $this->configReader = $container[Reader::class];
         $this->cacheRedisService = $container[CacheRedisService::class];
+        $this->logger = $container[CustomLogger::class];
+
     }
 
     protected function configure()
@@ -64,6 +70,8 @@ class AutoCleanCommand extends Command
         }
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 结束");
+
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(),'options'=>$input->getOptions()], 'console');
     }
 
 }

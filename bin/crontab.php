@@ -7,9 +7,9 @@ use Slim\App;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 
-$period = 10 * 1000;    // 每隔 10*1000ms (10秒) 触发一次
-echo $period . PHP_EOL;
-$timer = swoole_timer_tick($period, function ($timerId) {
+$period = 15 * 1000;    // 每隔 10*1000ms (10秒) 触发一次
+
+$func = function () {
 
     // 初始化 slim app
     $settings = require dirname(__DIR__) . '/src/settings.php';
@@ -30,26 +30,22 @@ $timer = swoole_timer_tick($period, function ($timerId) {
 
         $systemJob = new \App\Process\SystemJob();
         $systemJob->setDebugLogFile($logDir . "/system-job-debug.log." . $date);
-        $systemJob->setConfig(['exec' => $phpBin]);
 
         $systemJob->add('cmd-trial', [
-            'args' => [$console, 'cmd:trial'],
+            'command' => "{$phpBin} {$console} cmd:trial",
             'schedule' => '* * * * *',
-            'output' => $logDir . '/cmd-auto-clean.log.' . $date,
             'enabled' => true,
         ]);
 
         $systemJob->add('cmd-alive', [
-            'args' => [$console, 'cmd:alive'],
+            'command' => "{$phpBin} {$console} cmd:alive",
             'schedule' => '* * * * *',
-            'output' => $logDir . '/cmd-auto-clean.log.' . $date,
             'enabled' => true,
         ]);
 
         $systemJob->add('cmd-auto-clean', [
-            'args' => [$console, 'cmd:auto:clean'],
+            'command' => "{$phpBin} {$console} cmd:auto:clean",
             'schedule' => '0 * * * *',
-            'output' => $logDir . '/cmd-auto-clean.log.' . $date,
             'enabled' => true,
         ]);
 
@@ -59,9 +55,8 @@ $timer = swoole_timer_tick($period, function ($timerId) {
             $channel = $config->getChannel();
 
             $systemJob->add("cmd-tail-follow-{$channel}", [
-                'args' => [$console, 'cmd:tail:follow', "--channel={$channel}"],
+                'command' => "{$phpBin} {$console} cmd:tail:follow --channel={$channel}",
                 'schedule' => '* * * * *',
-                'output' => $logDir . '/cmd-auto-clean.log.' . $date,
                 'enabled' => true,
             ]);
         }
@@ -76,4 +71,6 @@ $timer = swoole_timer_tick($period, function ($timerId) {
         null;
     }
 
-});
+};
+
+$timer = swoole_timer_tick($period, $func);

@@ -9,6 +9,7 @@
 namespace App\Command;
 
 
+use App\Service\Logger\CustomLogger;
 use App\Service\Redis\PipeRedisService;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -20,11 +21,15 @@ class AliveCommand extends Command
     /** @var PipeRedisService */
     private $pipeRedisService;
 
+    /** @var CustomLogger */
+    private $logger;
+
     public function __construct(ContainerInterface $container)
     {
         parent::__construct();
 
         $this->pipeRedisService = $container[PipeRedisService::class];
+        $this->logger = $container[CustomLogger::class];
     }
 
     protected function configure()
@@ -48,5 +53,7 @@ class AliveCommand extends Command
 
         $nowTime = date('Y-m-d H:i:s');
         $output->writeln("[{$nowTime}] 上报心跳结束 {$result}");
+
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(), 'options' => $input->getOptions()], 'console');
     }
 }

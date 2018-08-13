@@ -10,6 +10,7 @@ namespace App\Command;
 
 
 use App\Service\Config\Reader;
+use App\Service\Logger\CustomLogger;
 use App\Service\Redis\CacheRedisService;
 use App\Service\TailFollow\TailFollowService;
 use Psr\Container\ContainerInterface;
@@ -30,6 +31,9 @@ class TailFollowCommand extends Command
     /** @var TailFollowService */
     private $tailFollowService;
 
+    /** @var CustomLogger */
+    private $logger;
+
     public function __construct(ContainerInterface $container)
     {
         parent::__construct();
@@ -37,6 +41,8 @@ class TailFollowCommand extends Command
         $this->configReader = $container[Reader::class];
         $this->cacheRedisService = $container[CacheRedisService::class];
         $this->tailFollowService = $container[TailFollowService::class];
+        $this->logger = $container[CustomLogger::class];
+
     }
 
     protected function configure()
@@ -63,5 +69,8 @@ class TailFollowCommand extends Command
         $this->tailFollowService->follow($config, $channelEntity);
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 结束");
+
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(),'options'=>$input->getOptions()], 'console');
+
     }
 }

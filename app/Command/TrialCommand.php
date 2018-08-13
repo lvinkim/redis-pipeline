@@ -36,9 +36,9 @@ class TrialCommand extends Command
     {
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 测试命令，开始");
 
-        $this->logger->log('cmd-trial', ['rand' => rand(100, 999)], 'console');
-
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 测试命令，结束");
+
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(),'options'=>$input->getOptions()], 'console');
     }
 
 }

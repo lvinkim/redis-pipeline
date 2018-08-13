@@ -32,8 +32,8 @@ class SystemJob
             throw new \Exception("'schedule' is required for '$jobId' job");
         }
 
-        if (!isset($config['exec'])) {
-            throw new \Exception("'exec' is required for '$jobId' job");
+        if (!isset($config['command'])) {
+            throw new \Exception("'command' is required for '$jobId' job");
         }
 
         $this->jobs[] = [$jobId, $config];
@@ -46,7 +46,6 @@ class SystemJob
             list($jobId, $config) = $jobConfig;
 
             $enabled = $config['enabled'] ?? true;
-            $output = $config['output'] ?? false;
 
             if (!$enabled) {
                 $this->debugLog("job({$jobId}) is not enabled");
@@ -60,20 +59,21 @@ class SystemJob
 
             $process = new Process(function (Process $childProcess) use ($config) {
 
-                $exec = $config['exec'];
-                $args = $config['args'] ?? [];
-                $childProcess->exec($exec, $args);
+                $command = $config['command'];
+                $childProcess->exec('/bin/sh', ['-c', $command]);
 
             }, true, false);
             $process->start();
 
             $this->debugLog("job({$jobId}) start with ({$config['schedule']})");
+        }
 
-            if ($output && is_writable($output)) {
-                file_put_contents($output, $process->read() . PHP_EOL, FILE_APPEND);
+        while (1) {
+            $ret = Process::wait(); // 必须等待所有子进程退出并回收资源，否则会产生僵尸进程
+            if (!$ret) {
+                break;
             }
         }
-        Process::wait();
     }
 
     /**

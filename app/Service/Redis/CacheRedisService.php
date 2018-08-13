@@ -90,5 +90,4 @@ class CacheRedisService extends ShareableService
 
         return new Client($parameters, $options);
     }
-
 }

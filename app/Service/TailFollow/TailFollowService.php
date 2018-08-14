@@ -78,7 +78,6 @@ class TailFollowService extends ShareableService
         // 更新 channel 缓存
         $newChannelEntity = new Channel();
         $newChannelEntity->setChannel($channelName);
-        $newChannelEntity->setSize($lastSize);
         $newChannelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
 
 
@@ -87,13 +86,14 @@ class TailFollowService extends ShareableService
 
         if (!$published && $newDateTimestamp > $dateTimestamp) {
             // 如果已经没有新内容，并且时间已过一天，则使用 newDate 缓存
-            null;
+            $lastSize = 0;
         } else {
             // 其余情况都仍然发布当前文件的内容
             $newDate = $date;
         }
 
         $newChannelEntity->setDate($newDate);
+        $newChannelEntity->setSize($lastSize);
 
         $this->cacheRedisService->setChannel($newChannelEntity);
     }

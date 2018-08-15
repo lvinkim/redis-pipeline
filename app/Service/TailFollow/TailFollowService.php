@@ -14,7 +14,7 @@ use App\Entity\Config;
 use App\Service\Component\ShareableService;
 use App\Service\Config\Reader;
 use App\Service\Redis\CacheRedisService;
-use App\Service\Redis\PipeRedisService;
+use App\Service\Redis\PipelineRedisManager;
 use Psr\Container\ContainerInterface;
 
 class TailFollowService extends ShareableService
@@ -22,8 +22,8 @@ class TailFollowService extends ShareableService
     /** @var Reader */
     private $configReader;
 
-    /** @var PipeRedisService */
-    private $pipeRedisService;
+    /** @var PipelineRedisManager */
+    private $pipelineRedisManager;
 
     /** @var CacheRedisService */
     private $cacheRedisService;
@@ -33,7 +33,7 @@ class TailFollowService extends ShareableService
         parent::__construct($container);
 
         $this->configReader = $container[Reader::class];
-        $this->pipeRedisService = $container[PipeRedisService::class];
+        $this->pipelineRedisManager = $container[PipelineRedisManager::class];
         $this->cacheRedisService = $container[CacheRedisService::class];
     }
 
@@ -46,8 +46,10 @@ class TailFollowService extends ShareableService
         // 组装要 follow 的文件名
         $fullPath = $this->configReader->genFullPath($configEntity, $channelEntity);
 
+        $id = $configEntity->getId();
         $channelName = $configEntity->getChannel();
         $postfixFormat = $configEntity->getPostfixFormat();
+        $redisConfigs = $configEntity->getRedisConfigs();
 
         $date = $channelEntity->getDate();
         $size = $channelEntity->getSize();
@@ -58,33 +60,40 @@ class TailFollowService extends ShareableService
             $size = -1;
         }
 
-        $newDate = date($postfixFormat);
-
         // follow
         $phpTailFollow = new PhpTailFollow($fullPath, $size);
 
         $newLines = $phpTailFollow->getNewLines();
 
         $lastSize = $size;
-        $published = false;
+        $hasNewLine = false;
         foreach ($newLines as $lastSize => $newLine) {
             $newLine = rtrim($newLine, "\n");
             if ($newLine) {
-                $this->pipeRedisService->publish($channelName, $newLine);
-                $published = true;
+                foreach ($redisConfigs as $redisConfig) {
+                    $host = $redisConfig->getHost();
+                    $port = $redisConfig->getPort();
+                    $pass = $redisConfig->getPass();
+
+                    $pipelineClient = $this->pipelineRedisManager->getClient($host, $port, $pass);
+                    $pipelineClient->publish($channelName, $newLine);
+                }
+                $hasNewLine = true;
             }
         }
 
         // 更新 channel 缓存
         $newChannelEntity = new Channel();
+        $newChannelEntity->setId($id);
         $newChannelEntity->setChannel($channelName);
         $newChannelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
 
+        $newDate = date($postfixFormat);
 
         $newDateTimestamp = strtotime($newDate);
         $dateTimestamp = strtotime($date);
 
-        if (!$published && $newDateTimestamp > $dateTimestamp) {
+        if (!$hasNewLine && ($newDateTimestamp > $dateTimestamp)) {
             // 如果已经没有新内容，并且时间已过一天，则使用 newDate 缓存
             $lastSize = 0;
         } else {

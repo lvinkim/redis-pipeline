@@ -14,6 +14,11 @@ class Channel
     /**
      * @var string
      */
+    private $id;
+
+    /**
+     * @var string
+     */
     private $channel;
 
     /**
@@ -30,6 +35,22 @@ class Channel
      * @var string
      */
     private $updateAt;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return string

@@ -30,9 +30,13 @@ class CacheRedisService extends ShareableService
         $this->client = $this->initialClient($host, $port, $pass);
     }
 
-    public function genChannelKey($channel)
+    /**
+     * @param $id
+     * @return string
+     */
+    public function genChannelKey($id)
     {
-        return 'channel.' . $channel;
+        return 'channel.' . $id;
     }
 
     /**
@@ -40,8 +44,9 @@ class CacheRedisService extends ShareableService
      */
     public function setChannel(Channel $channelEntity)
     {
-        $key = $this->genChannelKey($channelEntity->getChannel());
+        $key = $this->genChannelKey($channelEntity->getId());
 
+        $this->client->hset($key, 'id', $channelEntity->getId());
         $this->client->hset($key, 'channel', $channelEntity->getChannel());
         $this->client->hset($key, 'size', $channelEntity->getSize());
         $this->client->hset($key, 'date', $channelEntity->getDate());
@@ -49,19 +54,20 @@ class CacheRedisService extends ShareableService
     }
 
     /**
-     * @param $channel
+     * @param $id
      * @return Channel
      */
-    public function getChannel($channel)
+    public function getChannel($id)
     {
         $channelEntity = new Channel();
 
-        $key = $this->genChannelKey($channel);
+        $key = $this->genChannelKey($id);
 
-        $channelEntity->setChannel($this->client->hget($key, 'channel'));
+        $channelEntity->setId(strval($this->client->hget($key, 'id')));
+        $channelEntity->setChannel(strval($this->client->hget($key, 'channel')));
         $channelEntity->setSize($this->client->hget($key, 'size'));
-        $channelEntity->setDate($this->client->hget($key, 'date'));
-        $channelEntity->setUpdateAt($this->client->hget($key, 'updateAt'));
+        $channelEntity->setDate(strval($this->client->hget($key, 'date')));
+        $channelEntity->setUpdateAt(strval($this->client->hget($key, 'updateAt')));
 
         return $channelEntity;
     }

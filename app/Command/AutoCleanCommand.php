@@ -60,7 +60,7 @@ class AutoCleanCommand extends Command
             $lastChannel->setDate($lastDate);
             $fullPath = $this->configReader->genFullPath($config, $lastChannel);
 
-            $channel = $this->cacheRedisService->getChannel($config->getChannel());
+            $channel = $this->cacheRedisService->getChannel($config->getId());
 
             if (is_writable($fullPath) && $lastDate != $channel->getDate()) {
                 file_put_contents($fullPath, '');
@@ -71,7 +71,7 @@ class AutoCleanCommand extends Command
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 结束");
 
-        $this->logger->log('cmd-finished', ['cmd' => $this->getName(),'options'=>$input->getOptions()], 'console');
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(), 'options' => $input->getOptions()], 'console');
     }
 
 }

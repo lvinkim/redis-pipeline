@@ -24,8 +24,8 @@ class CustomLogger extends ShareableService
     {
         parent::__construct($container);
 
-        $settings = $container->get('settings')['logger'];
-        $this->loggerDirectory = $settings['directory'];
+        $settings = $container->get('settings');
+        $this->loggerDirectory = $settings['logger']['directory'];
     }
 
     public function log($logName, array $content = [], $subDir = '')
@@ -74,7 +74,7 @@ class CustomLogger extends ShareableService
         if (!isset($this->binds[$bindName])) {
 
             $subDir = $subDir ? $subDir . '/' : '';
-            $logPath = $this->loggerDirectory . "/vision/{$subDir}{$type}.log";
+            $logPath = $this->loggerDirectory . "/vision/{$subDir}{$type}.log." . date('Y-m-d');
             try {
                 $handler = new StreamHandler($logPath, Logger::INFO, true, 0777);
             } catch (\Exception $exception) {
@@ -88,10 +88,9 @@ class CustomLogger extends ShareableService
             $processor = function ($record) {
                 $newRecord = [
                     'host' => getenv('HOST_NICKNAME') ?: gethostname(),
-                    'channel' => $record['channel'],
-                    'level' => $record['level'],
-                    'context' => $record['context'],
+                    'level' => $record['level'] ?? 200,
                 ];
+                $newRecord = array_merge($newRecord, $record['context'] ?? []);
                 return $newRecord;
             };
             $logger->pushProcessor($processor);

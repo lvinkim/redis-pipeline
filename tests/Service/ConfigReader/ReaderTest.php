@@ -8,8 +8,10 @@
 
 namespace Tests\Service\ConfigReader;
 
+use App\Entity\Channel;
 use App\Entity\Config;
 use App\Service\Config\Reader;
+use Tests\Mocker\PipelineConfigMocker;
 use Tests\Service\ServiceTestCase;
 
 class ReaderTest extends ServiceTestCase
@@ -33,9 +35,28 @@ class ReaderTest extends ServiceTestCase
 
     public function testGetConfigByChannel()
     {
-        $channel = 'health';
-        $config = $this->reader->getConfigByChannel($channel);
+        $id = 'host-health-watcher';
+        $config = $this->reader->getConfigById($id);
 
         $this->assertInstanceOf(Config::class, $config);
+    }
+
+    public function testGenFullPath()
+    {
+        $id = 'host-health-watcher';
+        $config = $this->reader->getConfigById($id);
+
+
+        $channelEntity = new Channel();
+
+        $channelEntity->setId('host-health-watcher');
+        $channelEntity->setChannel('health-watcher');
+        $channelEntity->setSize(0);
+        $channelEntity->setDate('2018-08-15');
+        $channelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+        $fullPath = $this->reader->genFullPath($config, $channelEntity);
+
+        $this->assertTrue(is_string($fullPath));
     }
 }

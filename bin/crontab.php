@@ -2,6 +2,7 @@
 <?php
 
 use App\Service\Config\Reader;
+use App\Service\Logger\CustomLogger;
 use Slim\App;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -16,6 +17,9 @@ $func = function () {
     $app = new App($settings);
     require dirname(__DIR__) . '/src/dependencies.php';
     $container = $app->getContainer();
+
+    /** @var CustomLogger $logger */
+    $logger = $container[CustomLogger::class];
 
     $phpBin = '/usr/bin/php';
     $console = __DIR__ . '/console.php';
@@ -51,11 +55,9 @@ $func = function () {
 
         // 更多任务 ...
         foreach ($configs as $config) {
-
-            $channel = $config->getChannel();
-
-            $systemJob->add("cmd-tail-follow-{$channel}", [
-                'command' => "{$phpBin} {$console} cmd:tail:follow --channel={$channel}",
+            $id = $config->getId();
+            $systemJob->add("cmd-tail-follow-{$id}", [
+                'command' => "{$phpBin} {$console} cmd:tail:follow --id={$id}",
                 'schedule' => '* * * * *',
                 'enabled' => true,
             ]);
@@ -64,11 +66,11 @@ $func = function () {
         $systemJob->run();
 
     } catch (\Error $e) {
-        null;
+        $logger->log('error', ['error' => $e->getMessage()], 'crontab');
     } catch (Exception $e) {
-        null;
+        $logger->log('error', ['error' => $e->getMessage()], 'crontab');
     } finally {
-        null;
+        $logger->log('access', [], 'crontab');
     }
 
 };

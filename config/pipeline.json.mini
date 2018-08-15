@@ -1,8 +1,0 @@
-[
-  {
-    "channel": "health-watcher",
-    "filePath": "PROJECT_DIRECTORY/var/logstash/health-watcher.log.",
-    "postfixFormat": "Y-m-d",
-    "enable": true
-  }
-]

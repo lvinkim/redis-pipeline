@@ -9,6 +9,7 @@
 namespace App\Command;
 
 
+use App\Entity\Config;
 use App\Service\Config\Reader;
 use App\Service\Logger\CustomLogger;
 use App\Service\Redis\CacheRedisService;
@@ -48,29 +49,29 @@ class TailFollowCommand extends Command
     protected function configure()
     {
         $this->setName('cmd:tail:follow')
-            ->addOption('channel', null, InputOption::VALUE_REQUIRED)
+            ->addOption('id', null, InputOption::VALUE_REQUIRED)
             ->setDescription('tail follow channel >> redis pipeline');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $channel = $input->getOption('channel');
+        $id = $input->getOption('id');
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 开始");
 
-        $config = $this->configReader->getConfigByChannel($channel);
-        if (!$config) {
-            $output->writeln("channel {$channel} 配置不存在");
+        $config = $this->configReader->getConfigById($id);
+        if (!($config instanceof Config)) {
+            $output->writeln("channel {$id} 配置不存在");
             return;
         }
 
-        $channelEntity = $this->cacheRedisService->getChannel($channel);
+        $channelEntity = $this->cacheRedisService->getChannel($id);
 
         $this->tailFollowService->follow($config, $channelEntity);
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 结束");
 
-        $this->logger->log('cmd-finished', ['cmd' => $this->getName(),'options'=>$input->getOptions()], 'console');
+        $this->logger->log('cmd-finished', ['cmd' => $this->getName(), 'options' => $input->getOptions()], 'console');
 
     }
 }

@@ -34,11 +34,6 @@ return (function () {
                     'port' => getenv('CACHE_REDIS_PORT'),
                     'pass' => getenv('CACHE_REDIS_PASS'),
                 ],
-                'pipeline' => [
-                    'host' => getenv('REDIS_HOST'),
-                    'port' => getenv('REDIS_PORT'),
-                    'pass' => getenv('REDIS_PASS'),
-                ],
             ],
         ],
     ];

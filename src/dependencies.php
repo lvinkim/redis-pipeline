@@ -15,11 +15,11 @@
         'notFoundHandler' => \App\Handler\NotFoundHandler::class, // 请求的路由不存在 404
         \App\Service\Config\Reader::class,
         \App\Service\TailFollow\TailFollowService::class,
+        \App\Service\Redis\PipelineRedisManager::class,
     ]);
 
     $autoRegister->bind((function () use ($container) {
         yield \App\Service\Redis\CacheRedisService::class;
-        yield \App\Service\Redis\PipeRedisService::class;
     })());
 
 })();

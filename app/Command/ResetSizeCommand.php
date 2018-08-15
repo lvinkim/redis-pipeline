@@ -9,6 +9,7 @@
 namespace App\Command;
 
 
+use App\Entity\Config;
 use App\Service\Config\Reader;
 use App\Service\Redis\CacheRedisService;
 use Psr\Container\ContainerInterface;
@@ -37,25 +38,26 @@ class ResetSizeCommand extends Command
     protected function configure()
     {
         $this->setName('cmd:reset:size')
-            ->addOption('channel', null, InputOption::VALUE_REQUIRED)
+            ->addOption('id', null, InputOption::VALUE_REQUIRED)
             ->setDescription('重置指定 channel 的 size 为 -1');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $channel = $input->getOption('channel');
+        $id = $input->getOption('id');
 
         $output->writeln("[{" . date('Y-m-d H:i:s') . "}] 开始");
 
-        $config = $this->configReader->getConfigByChannel($channel);
-        if (!$config) {
-            $output->writeln("channel {$channel} 配置不存在");
+        $config = $this->configReader->getConfigById($id);
+        if (!($config instanceof Config)) {
+            $output->writeln("id {$id} 配置不存在");
             return;
         }
 
-        $channelEntity = $this->cacheRedisService->getChannel($channel);
+        $channelEntity = $this->cacheRedisService->getChannel($id);
 
-        $channelEntity->setChannel($channel);
+        $channelEntity->setId($id);
+        $channelEntity->setChannel($config->getChannel());
         $channelEntity->setSize(-1);
         $channelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
 

@@ -46,18 +46,30 @@ class GetConfigsCommand extends Command
         $configs = $this->configReader->getConfigs();
         foreach ($configs as $config) {
 
-            $channel = $config->getChannel();
+            $id = $config->getId();
+            $channelEntity = $this->cacheRedisService->getChannel($id);
 
-            $channelEntity = $this->cacheRedisService->getChannel($channel);
+            $redisConfigs = [];
+            foreach ($config->getRedisConfigs() as $redisConfig) {
+                $redisConfigs[] = [
+                    'host' => $redisConfig->getHost(),
+                    'port' => $redisConfig->getPort(),
+                    'pass' => $redisConfig->getPass(),
+                ];
+            }
 
             $configInfo = [
-                'config.channel' => $channel,
-                'config.FilePath' => $config->getFilePath(),
-                'config.PostfixFormat' => $config->getPostfixFormat(),
+                'config.id' => $id,
+                'config.channel' => $config->getChannel(),
+                'config.filePath' => $config->getFilePath(),
+                'config.postfixFormat' => $config->getPostfixFormat(),
+                'config.enable' => $config->isEnable(),
+                'config.redis' => $redisConfigs,
+                'cache.id' => $channelEntity->getId(),
                 'cache.channel' => $channelEntity->getChannel(),
-                'cache.Size' => $channelEntity->getSize(),
-                'cache.Date' => $channelEntity->getDate(),
-                'cache.UpdateAt' => $channelEntity->getUpdateAt(),
+                'cache.size' => $channelEntity->getSize(),
+                'cache.date' => $channelEntity->getDate(),
+                'cache.updateAt' => $channelEntity->getUpdateAt(),
             ];
 
             $output->writeln(json_encode($configInfo, JSON_PRETTY_PRINT));

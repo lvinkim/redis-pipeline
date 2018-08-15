@@ -1,0 +1,30 @@
+[
+  {
+    "id": "app-alive",
+    "channel": "app-alive",
+    "filePath": "PROJECT_DIRECTORY/var/logstash/app-alive.log.",
+    "postfixFormat": "Y-m-d",
+    "enable": true,
+    "redis": [
+      {
+        "host": "10.135.57.190",
+        "port": "6379",
+        "pass": ""
+      }
+    ]
+  },
+  {
+    "id": "host-health-watcher",
+    "channel": "health-watcher",
+    "filePath": "PROJECT_DIRECTORY/var/logstash/health-watcher.log.",
+    "postfixFormat": "Y-m-d",
+    "enable": true,
+    "redis": [
+      {
+        "host": "10.135.57.190",
+        "port": "6379",
+        "pass": ""
+      }
+    ]
+  }
+]

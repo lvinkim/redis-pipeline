@@ -9,8 +9,15 @@
 namespace App\Entity;
 
 
+use App\Entity\Embed\RedisConfig;
+
 class Config
 {
+    /**
+     * @var string
+     */
+    private $id;
+
     /**
      * @var string
      */
@@ -30,6 +37,27 @@ class Config
      * @var bool
      */
     private $enable;
+
+    /**
+     * @var RedisConfig[]
+     */
+    private $redisConfigs;
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 
     /**
      * @return string
@@ -93,6 +121,22 @@ class Config
     public function setEnable(bool $enable): void
     {
         $this->enable = $enable;
+    }
+
+    /**
+     * @return RedisConfig[]
+     */
+    public function getRedisConfigs(): array
+    {
+        return $this->redisConfigs;
+    }
+
+    /**
+     * @param RedisConfig[] $redisConfigs
+     */
+    public function setRedisConfigs(array $redisConfigs): void
+    {
+        $this->redisConfigs = $redisConfigs;
     }
 
 }

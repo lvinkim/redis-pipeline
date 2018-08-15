@@ -1,6 +1,1 @@
-/*
-
-!.gitignore
-
-!pipeline.json.example
-!pipeline.json.mini
+/pipeline.json

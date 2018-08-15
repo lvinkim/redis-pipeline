@@ -1,0 +1,30 @@
+[
+  {
+    "id": "host-health-watcher",
+    "channel": "health-watcher",
+    "filePath": "PROJECT_DIRECTORY/var/logstash/health-watcher.log.",
+    "postfixFormat": "Y-m-d",
+    "enable": true,
+    "redis": [
+      {
+        "host": "docker.for.mac.localhost",
+        "port": "6379",
+        "pass": ""
+      }
+    ]
+  },
+  {
+    "id": "example",
+    "channel": "example",
+    "filePath": "INPUT_DIRECTORY/logs/example.log.",
+    "postfixFormat": "Y-m-d",
+    "enable": true,
+    "redis": [
+      {
+        "host": "docker.for.mac.localhost",
+        "port": "6379",
+        "pass": ""
+      }
+    ]
+  }
+]

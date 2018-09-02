@@ -10,6 +10,7 @@ return (function () {
 
     return [
         'settings' => [
+            "trace" => getenv("OPEN_TRACE"),
             'env' => getenv('ENV'),
             'displayErrorDetails' => getenv('ENV') == 'dev' ? true : false, // set to false in production
             'addContentLengthHeader' => false, // Allow the web server to send the content-length header
@@ -27,6 +28,9 @@ return (function () {
             ],
             'logger' => [
                 'directory' => dirname(__DIR__) . '/var/logs',
+            ],
+            'traceLog' => [
+                'directory' => dirname(__DIR__) . '/var/trace',
             ],
             'redis' => [
                 'cache' => [

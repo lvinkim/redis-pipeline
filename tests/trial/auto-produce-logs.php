@@ -19,6 +19,8 @@ $container = $app->getContainer();
 
 $tickFunc = function ($timerId) use ($container) {
 
+    $cursor = time();
+
     $settings = $container->get('settings');
 
     $rootDirectory = $settings['root']['directory'];
@@ -27,10 +29,9 @@ $tickFunc = function ($timerId) use ($container) {
         'host' => getenv('HOST_NICKNAME') ?: gethostname(),
         'app' => 'server',
         'item' => 'disk_use',
-        'value' => rand(10, 99),
+        'value' => $cursor,
     ]);
     file_put_contents($filePath, $data . PHP_EOL, FILE_APPEND);
-
 
     $inputDirectory = $settings['input']['directory'];
     $inputPath = $inputDirectory . '/var/logstash/app-item.log.' . date('Y-m-d');
@@ -38,7 +39,7 @@ $tickFunc = function ($timerId) use ($container) {
         'host' => getenv('HOST_NICKNAME') ?: gethostname(),
         'app' => 'app',
         'item' => 'test',
-        'value' => rand(10, 99),
+        'value' => $cursor,
     ]);
     file_put_contents($inputPath, $data . PHP_EOL, FILE_APPEND);
 

@@ -13,12 +13,16 @@ use App\Entity\Channel;
 use App\Entity\Config;
 use App\Service\Component\ShareableService;
 use App\Service\Config\Reader;
+use App\Service\Logger\CustomLogger;
 use App\Service\Redis\CacheRedisService;
 use App\Service\Redis\PipelineRedisManager;
 use Psr\Container\ContainerInterface;
 
 class TailFollowService extends ShareableService
 {
+    private $trace;
+    private $traceLog;
+
     /** @var Reader */
     private $configReader;
 
@@ -28,13 +32,22 @@ class TailFollowService extends ShareableService
     /** @var CacheRedisService */
     private $cacheRedisService;
 
+    /** @var CustomLogger */
+    private $logger;
+
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
 
+        $settings = $container->get('settings');
+        $this->trace = boolval($settings["trace"]);
+        $this->traceLog = strval($settings["traceLog"]["directory"]);
+
         $this->configReader = $container[Reader::class];
         $this->pipelineRedisManager = $container[PipelineRedisManager::class];
         $this->cacheRedisService = $container[CacheRedisService::class];
+
+        $this->logger = $container[CustomLogger::class];
     }
 
     /**
@@ -77,6 +90,11 @@ class TailFollowService extends ShareableService
 
                     $pipelineClient = $this->pipelineRedisManager->getClient($host, $port, $pass);
                     $pipelineClient->publish($channelName, $newLine);
+
+                    if ($this->trace) {
+                        file_put_contents($this->traceLog . "/{$id}", $newLine . PHP_EOL, FILE_APPEND);
+                    }
+
                 }
                 $hasNewLine = true;
             }

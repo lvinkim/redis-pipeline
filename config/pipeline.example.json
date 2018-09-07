@@ -26,5 +26,19 @@
         "pass": ""
       }
     ]
+  },
+  {
+    "id": "pc-inbound-product",
+    "channel": "pc-inbound-product",
+    "filePath": "INPUT_DIRECTORY/log/inbound/product-POSTFIX_FORMAT.log",
+    "postfixFormat": "Y-m-d",
+    "enable": true,
+    "redis": [
+      {
+        "host": "docker.for.mac.localhost",
+        "port": "6379",
+        "pass": ""
+      }
+    ]
   }
 ]

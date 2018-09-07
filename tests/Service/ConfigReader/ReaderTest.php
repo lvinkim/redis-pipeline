@@ -46,13 +46,30 @@ class ReaderTest extends ServiceTestCase
         $id = 'host-health-watcher';
         $config = $this->reader->getConfigById($id);
 
+        $channelEntity = new Channel();
+
+        $channelEntity->setId($config->getId());
+        $channelEntity->setChannel($config->getChannel());
+        $channelEntity->setSize(0);
+        $channelEntity->setDate('2018-08-15');
+        $channelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
+
+        $fullPath = $this->reader->genFullPath($config, $channelEntity);
+
+        $this->assertTrue(is_string($fullPath));
+    }
+
+    public function testGenPostfixFormatFullPath()
+    {
+        $id = 'pc-inbound-product';
+        $config = $this->reader->getConfigById($id);
 
         $channelEntity = new Channel();
 
-        $channelEntity->setId('host-health-watcher');
-        $channelEntity->setChannel('health-watcher');
+        $channelEntity->setId($config->getId());
+        $channelEntity->setChannel($config->getChannel());
         $channelEntity->setSize(0);
-        $channelEntity->setDate('2018-08-15');
+        $channelEntity->setDate('2018-09-07');
         $channelEntity->setUpdateAt((new \DateTime())->format('Y-m-d H:i:s'));
 
         $fullPath = $this->reader->genFullPath($config, $channelEntity);

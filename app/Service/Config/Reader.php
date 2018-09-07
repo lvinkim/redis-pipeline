@@ -129,7 +129,11 @@ class Reader extends ShareableService
             $date = date($postfixFormat);
         }
 
-        $fullPath = $filePathPrefix . $date;
+        if (false !== strpos($filePathPrefix, "POSTFIX_FORMAT")) {
+            $fullPath = str_replace("POSTFIX_FORMAT", $date, $filePathPrefix);
+        } else {
+            $fullPath = $filePathPrefix . $date;
+        }
 
         $fullPath = str_replace('PROJECT_DIRECTORY', $this->projectDirectory, $fullPath);
         $fullPath = str_replace('INPUT_DIRECTORY', $this->inputDirectory, $fullPath);
